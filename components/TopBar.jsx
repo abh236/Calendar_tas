@@ -45,18 +45,22 @@ export default function TopBar({ onSearch, searchQuery, accent, onNewEvent, onTo
 
         {/* Desktop nav links */}
         <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
-          {["Calendar","Insights","Archive"].map(label => (
-            <button key={label} onClick={() => onNavChange(label)}
-              className="press px-3 py-1.5 rounded-lg text-sm font-medium transition-all"
-              style={{
-                background: activeNav === label ? `${accent}18` : "transparent",
-                color: activeNav === label ? accent : isDark ? "#94a3b8" : "#64748b",
-                border: "none", cursor: "pointer",
-                fontWeight: activeNav === label ? 700 : 500,
-              }}>
-              {label}
-            </button>
-          ))}
+          {["Calendar","Insights","Archive"].map(label => {
+            const calViews = ["Calendar","Month View","Team Schedule","Resources","Project Notes"];
+            const isActive = label === "Calendar" ? calViews.includes(activeNav) : activeNav === label;
+            return (
+              <button key={label} onClick={() => onNavChange(label)}
+                className="press px-3 py-1.5 rounded-lg text-sm font-medium transition-all"
+                style={{
+                  background: isActive ? `${accent}18` : "transparent",
+                  color: isActive ? accent : isDark ? "#94a3b8" : "#64748b",
+                  border: "none", cursor: "pointer",
+                  fontWeight: isActive ? 700 : 500,
+                }}>
+                {label}
+              </button>
+            );
+          })}
         </nav>
 
         {/* Right actions */}
@@ -226,17 +230,21 @@ export default function TopBar({ onSearch, searchQuery, accent, onNewEvent, onTo
           {/* Nav */}
           <div className="px-4 pb-3">
             <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 px-2">Navigate</p>
-            {["Calendar","Insights","Archive"].map(label => (
-              <button key={label} onClick={() => { onNavChange(label); setShowMobileMenu(false); }}
-                className="press w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-left mb-1"
-                style={{ background: activeNav === label ? `${accent}15` : "transparent", color: activeNav === label ? accent : isDark ? "#94a3b8" : "#475569", border: "none", cursor: "pointer" }}>
-                <span className="w-2 h-2 rounded-full" style={{ background: activeNav === label ? accent : "#cbd5e1" }} />
-                {label}
-                {activeNav === label && (
-                  <svg className="w-4 h-4 ml-auto" style={{ color: accent }} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-                )}
-              </button>
-            ))}
+            {["Calendar","Insights","Archive"].map(label => {
+              const calViews = ["Calendar","Month View","Team Schedule","Resources","Project Notes"];
+              const isActive = label === "Calendar" ? calViews.includes(activeNav) : activeNav === label;
+              return (
+                <button key={label} onClick={() => { onNavChange(label); setShowMobileMenu(false); }}
+                  className="press w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-left mb-1"
+                  style={{ background: isActive ? `${accent}15` : "transparent", color: isActive ? accent : isDark ? "#94a3b8" : "#475569", border: "none", cursor: "pointer" }}>
+                  <span className="w-2 h-2 rounded-full" style={{ background: isActive ? accent : "#cbd5e1" }} />
+                  {label}
+                  {isActive && (
+                    <svg className="w-4 h-4 ml-auto" style={{ color: accent }} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                  )}
+                </button>
+              );
+            })}
           </div>
 
           {/* Settings */}

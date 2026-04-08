@@ -9,6 +9,9 @@ import BentoCards from "./BentoCards";
 import MiniMonthPreview from "./MiniMonthPreview";
 import InsightsView from "./InsightsView";
 import ArchiveView from "./ArchiveView";
+import TeamScheduleView from "./TeamScheduleView";
+import ResourcesView from "./ResourcesView";
+import ProjectNotesView from "./ProjectNotesView";
 import { MONTH_NAMES, MONTH_CONFIG, storageKey } from "@/lib/calendarData";
 
 const TODAY = new Date();
@@ -24,7 +27,8 @@ export default function StudioPlanner() {
   const [newEventText, setNewEventText] = useState("");
   const [showYearView, setShowYearView] = useState(false);
   const [isDark, setIsDark]             = useState(false);
-  const [activeNav, setActiveNav]       = useState("Calendar");
+  // Single view state — covers topbar (Calendar/Insights/Archive) + sidebar (Team Schedule/Resources/Project Notes)
+  const [view, setView]                 = useState("Calendar");
 
   const month  = currentDate.getMonth();
   const year   = currentDate.getFullYear();
@@ -107,7 +111,7 @@ export default function StudioPlanner() {
   };
 
   const jumpToMonth = (y, m) => {
-    setActiveNav("Calendar");
+    setView("Calendar");
     setVisible(false);
     setTimeout(() => {
       setCurrentDate(new Date(y, m, 1));
@@ -126,8 +130,8 @@ export default function StudioPlanner() {
         onNewEvent={() => setShowNewEvent(true)}
         onToggleDark={() => setIsDark(v => !v)}
         isDark={isDark}
-        activeNav={activeNav}
-        onNavChange={setActiveNav}
+        activeNav={view}
+        onNavChange={setView}
       />
 
       <div className="flex flex-1 pt-16">
@@ -140,17 +144,19 @@ export default function StudioPlanner() {
           onToday={jumpToToday}
           mood={config.mood}
           onNewEvent={() => setShowNewEvent(true)}
+          sideView={view}
+          onSideView={setView}
         />
 
         <main className="flex-1 min-w-0 overflow-y-auto pb-24 lg:pb-10">
 
-          {activeNav === "Insights" && <InsightsView accent={config.accent} />}
+          {view === "Insights"      && <InsightsView accent={config.accent} />}
+          {view === "Archive"       && <ArchiveView accent={config.accent} onJumpToMonth={jumpToMonth} />}
+          {view === "Team Schedule" && <TeamScheduleView accent={config.accent} />}
+          {view === "Resources"     && <ResourcesView accent={config.accent} />}
+          {view === "Project Notes" && <ProjectNotesView accent={config.accent} />}
 
-          {activeNav === "Archive" && (
-            <ArchiveView accent={config.accent} onJumpToMonth={jumpToMonth} />
-          )}
-
-          {activeNav === "Calendar" && (
+          {(view === "Calendar" || view === "Month View") && (
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
 
               {/* Controls row */}

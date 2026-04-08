@@ -92,13 +92,19 @@ body {
   line-height: 2.5rem;
 }
 
-/* Slide in */
+/* Slide in from right */
 @keyframes slideIn {
   from { transform: translateX(100%); opacity: 0; }
   to   { transform: translateX(0); opacity: 1; }
 }
 .slide-in { animation: slideIn 0.25s cubic-bezier(0.22,1,0.36,1) forwards; }
 
+/* Slide in from left (mobile sidebar drawer) */
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+.slide-in-right { animation: slideInLeft 0.28s cubic-bezier(0.22,1,0.36,1) forwards; }
 /* Sidebar nav hover */
 .nav-item { transition: transform 0.15s ease, background-color 0.15s ease; }
 .nav-item:hover { transform: translateX(3px); }
